@@ -1,0 +1,51 @@
+class RandomizedCollection {
+  public:
+    std::unordered_map<int, unordered_set<int>> elementIndices;
+    std::vector<int> elements;
+
+    /** Initialize your data structure here. */
+    RandomizedCollection() {
+      srand (time(NULL));
+    }
+
+    /** Inserts a value to the collection. Returns true if the collection did not already contain the specified element. */
+    bool insert(int val) {
+      bool elementNotExists = elementIndices[val].empty();
+      elements.push_back(val);
+      elementIndices[val].insert(elements.size() - 1);
+      return elementNotExists;
+    }
+
+    /** Removes a value from the collection. Returns true if the collection contained the specified element. */
+    bool remove(int val) {
+      if (elementIndices[val].empty()) {
+        return false;
+      }
+      int valIndex = *(elementIndices[val].begin());
+      if (valIndex == elements.size() - 1) {
+        elements.pop_back();
+        elementIndices[val].erase(valIndex);
+      } else {
+        elements[valIndex] = elements.back();
+        elementIndices[val].erase(valIndex);
+        elementIndices[elements.back()].erase(elements.size() - 1);
+        elementIndices[elements.back()].insert(valIndex);
+        elements.pop_back();
+      }
+
+      return true;
+    }
+
+    /** Get a random element from the collection. */
+    int getRandom() {
+      return elements[rand() % elements.size()];
+    }
+};
+
+/**
+ *  * Your RandomizedCollection object will be instantiated and called as such:
+ *   * RandomizedCollection obj = new RandomizedCollection();
+ *    * bool param_1 = obj.insert(val);
+ *     * bool param_2 = obj.remove(val);
+ *      * int param_3 = obj.getRandom();
+ *       */

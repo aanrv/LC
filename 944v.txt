@@ -1,0 +1,21 @@
+class Solution {
+  public:
+    int minDeletionSize(vector<string>& A) {
+      if (A.size() == 0) return 0;
+      size_t numColumns = A[0].length();
+      int removeCount = 0;
+      for (size_t i = 0; i < numColumns; ++i) {
+        char previousChar = A[0][i];
+        bool deletedColumn = false;
+        for (size_t x = 1; !deletedColumn && x < A.size(); ++x) {
+          if (A[x][i] < previousChar) {
+            ++removeCount;
+            deletedColumn = true;
+          }
+          previousChar = A[x][i];
+        }
+      }
+
+      return removeCount;
+    }
+};

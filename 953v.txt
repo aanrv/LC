@@ -1,0 +1,39 @@
+class Solution {
+  public:
+    unordered_map<char, int> stringToDict(string order) {
+      unordered_map<char, int> out;
+      int count = 0;
+      for (auto it = order.begin(); it != order.end(); ++it) {
+        out[*it] = count++;
+      }
+      return out;
+    }
+
+    bool inOrder(const string& a, const string& b, const unordered_map<char, int> alphabet) {
+      if (a.size() == 0) {
+        return true;
+      }
+
+      size_t i;
+      for (i = 0; i < a.size() && i < b.size(); ++i) {
+        if (alphabet.at(a[i]) < alphabet.at(b[i])) {
+          return true;
+        } else if (alphabet.at(a[i]) > alphabet.at(b[i])) {
+          return false;
+        }
+      }
+
+      if (i == b.size()) {
+        return false;
+      }
+
+      return true;
+    }
+
+    bool isAlienSorted(vector<string>& words, string order) {
+      for (size_t i = 0; i < words.size() - 1; ++i) {
+        if (!inOrder(words[i], words[i+1], stringToDict(order))) return false;
+      }
+      return true;
+    }
+};

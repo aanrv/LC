@@ -1,0 +1,68 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+  public:
+    enum TreeType {
+      PERFECT,
+      COMPLETE,
+      NONE,
+    };
+
+    TreeType getTreeType(TreeNode* root, int* height) {
+      if (root == NULL) {
+        if (height != NULL) *height = 0;
+        return TreeType::PERFECT;
+      }
+      if (root->left == NULL && root->right == NULL) {
+        if (height != NULL) *height = 1;
+        return TreeType::PERFECT;
+      }
+
+      int lTreeHeight;
+      int rTreeHeight;
+      TreeType lTreeType = getTreeType(root->left, &lTreeHeight);
+      TreeType rTreeType = getTreeType(root->right, &rTreeHeight);
+
+      TreeType rootType;
+      if (
+          lTreeHeight == rTreeHeight
+          && lTreeType == TreeType::PERFECT
+          && rTreeType == TreeType::PERFECT
+         ) {
+        rootType = TreeType::PERFECT;
+      } else if (
+          lTreeHeight == rTreeHeight
+          && lTreeType == TreeType::PERFECT
+          && rTreeType == TreeType::COMPLETE
+          ) {
+        rootType = TreeType::COMPLETE;
+      } else if (
+          lTreeHeight == rTreeHeight + 1
+          && (
+            lTreeType == TreeType::COMPLETE
+            || lTreeType == TreeType::PERFECT
+            )
+          && rTreeType == TreeType::PERFECT
+          ) {
+        rootType = TreeType::COMPLETE;
+      } else {
+        rootType = TreeType::NONE;
+      }
+
+      if (height != NULL) *height = (lTreeHeight > rTreeHeight ? lTreeHeight : rTreeHeight) + 1;
+      return rootType;
+    }
+
+    bool isCompleteTree(TreeNode* root) {
+      return
+        getTreeType(root, NULL) == TreeType::PERFECT
+        || getTreeType(root, NULL) == TreeType::COMPLETE;
+    }
+};

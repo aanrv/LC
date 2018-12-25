@@ -1,0 +1,14 @@
+class Solution {
+  public:
+    int repeatedNTimes(vector<int>& A) {
+      unordered_set<int> elements;
+      for (auto it = A.begin(); it != A.end(); ++it) {
+        if (elements.find(*it) != elements.end()) {
+          return *it;
+        } else {
+          elements.insert(*it);
+        }
+      }
+      return -1;
+    }
+};

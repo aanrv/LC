@@ -1,0 +1,44 @@
+class Solution {
+  public:
+    bool canReorderDoubled(vector<int>& A) {
+      std::map<int, int> valueCount;
+      for (auto it = A.begin(); it != A.end(); ++it) {
+        ++valueCount[*it];
+      }
+
+      for (auto it = valueCount.begin(); it != valueCount.end(); ) {
+        int value = it->first;
+        int doubledValue = value * 2;
+        if (value == doubledValue) {
+          auto nextIt = valueCount.erase(it);
+          it = nextIt;
+          continue;
+        }
+
+        if (valueCount.find(doubledValue) != valueCount.end()) {
+
+          int minCount =
+            valueCount.at(value) < valueCount.at(doubledValue)
+            ? valueCount.at(value)
+            : valueCount.at(doubledValue);
+
+          valueCount[value] -= minCount;
+          valueCount[doubledValue] -= minCount;
+
+          if (valueCount.at(doubledValue) == 0) {
+            valueCount.erase(valueCount.find(doubledValue));
+          }
+          if (valueCount.at(value) == 0) {
+            it = valueCount.erase(valueCount.find(value));
+          } else {
+            ++it;
+          }
+        } else {
+          ++it;
+        }
+
+      }
+
+      return valueCount.empty();
+    }
+};

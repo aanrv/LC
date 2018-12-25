@@ -1,0 +1,16 @@
+class Solution {
+  public:
+    vector<int> deckRevealedIncreasing(vector<int>& deck) {
+      sort(deck.rbegin(), deck.rend());
+
+      deque<int> correctOrdering;
+      for (auto it = deck.begin(); it != deck.end(); ++it) {
+        if (it != deck.begin()) {
+          correctOrdering.push_front(correctOrdering.back());
+          correctOrdering.pop_back();
+        }   
+        correctOrdering.push_front(*it);
+      }
+      return vector<int>(correctOrdering.begin(), correctOrdering.end());
+    }
+};
